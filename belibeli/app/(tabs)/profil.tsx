@@ -1,9 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import {
-  View, Text, StyleSheet, Image, Switch, TouchableOpacity, Modal, Platform, ActionSheetIOS
+  View, Text, StyleSheet, Image, Switch, TouchableOpacity,
+  Modal, Platform, ActionSheetIOS,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useTheme } from '../_layout'; // Import useTheme dari ThemeContext
 
 // Debounce function to prevent rapid multiple clicks
 const debounce = (func, delay) => {
@@ -44,20 +46,22 @@ const textStrings = {
 };
 
 const ProfileScreen = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode, setIsDarkMode } = useTheme(); // Akses dari ThemeContext
   const [language, setLanguage] = useState<'EN' | 'ID'>('EN');
   const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
 
-  const toggleDarkMode = () => setIsDarkMode(previousState => !previousState);
+  const toggleDarkMode = () => setIsDarkMode((prev) => !prev); // Fungsi toggle
 
   const handleBackPress = useCallback(
     debounce(() => {
       navigation.goBack();
     }, 300),
-    []
+    [navigation]
   );
+
+  const strings = textStrings[language];
 
   const showLanguageOptions = () => {
     if (Platform.OS === 'ios') {
@@ -67,11 +71,8 @@ const ProfileScreen = () => {
           cancelButtonIndex: 0,
         },
         (buttonIndex) => {
-          if (buttonIndex === 1) {
-            setLanguage('EN');
-          } else if (buttonIndex === 2) {
-            setLanguage('ID');
-          }
+          if (buttonIndex === 1) setLanguage('EN');
+          if (buttonIndex === 2) setLanguage('ID');
         }
       );
     } else {
@@ -84,30 +85,32 @@ const ProfileScreen = () => {
     setModalVisible(false);
   };
 
-  const strings = textStrings[language];
-
   return (
     <View style={[styles.container, isDarkMode ? styles.containerDark : styles.containerLight]}>
-      {/* Back Button */}
       <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
         <FontAwesome name="chevron-left" size={24} color={isDarkMode ? 'white' : 'black'} />
       </TouchableOpacity>
 
-      {/* Header */}
-      <Text style={[styles.title, isDarkMode ? styles.textDark : styles.textLight]}>{strings.profileTitle}</Text>
+      <Text style={[styles.title, isDarkMode ? styles.textDark : styles.textLight]}>
+        {strings.profileTitle}
+      </Text>
 
-      {/* Profile Picture */}
       <View style={styles.profileContainer}>
         <Image
           source={{ uri: 'https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/65/2023/09/04/IU-korea-2718228728.jpg' }}
           style={styles.profileImage}
         />
-        <Text style={[styles.profileName, isDarkMode ? styles.textDark : styles.textLight]}>{strings.profileName}</Text>
-        <Text style={[styles.profileId, isDarkMode ? styles.textDark : styles.textLight]}>{strings.profileId}</Text>
-        <Text style={[styles.profileDate, isDarkMode ? styles.textDark : styles.textLight]}>{strings.profileDate}</Text>
+        <Text style={[styles.profileName, isDarkMode ? styles.textDark : styles.textLight]}>
+          {strings.profileName}
+        </Text>
+        <Text style={[styles.profileId, isDarkMode ? styles.textDark : styles.textLight]}>
+          {strings.profileId}
+        </Text>
+        <Text style={[styles.profileDate, isDarkMode ? styles.textDark : styles.textLight]}>
+          {strings.profileDate}
+        </Text>
       </View>
 
-      {/* Language and Dark Mode Settings */}
       <View style={styles.settingContainer}>
         <TouchableOpacity style={styles.settingRow} onPress={showLanguageOptions}>
           <Text style={[styles.settingLabel, isDarkMode ? styles.textDark : styles.textLight]}>
@@ -120,21 +123,22 @@ const ProfileScreen = () => {
         </TouchableOpacity>
 
         <View style={styles.settingRow}>
-          <Text style={[styles.settingLabel, isDarkMode ? styles.textDark : styles.textLight]}>{strings.darkMode}</Text>
+          <Text style={[styles.settingLabel, isDarkMode ? styles.textDark : styles.textLight]}>
+            {strings.darkMode}
+          </Text>
           <Switch
             trackColor={{ false: '#767577', true: '#81b0ff' }}
             thumbColor={isDarkMode ? '#f5dd4b' : '#f4f3f4'}
-            onValueChange={toggleDarkMode}
-            value={isDarkMode}
+            onValueChange={toggleDarkMode} // Mengaktifkan toggle
+            value={isDarkMode} // Bind dengan state
           />
         </View>
       </View>
 
-      {/* Modal for Android */}
       {Platform.OS === 'android' && (
         <Modal
           animationType="slide"
-          transparent={true}
+          transparent
           visible={modalVisible}
           onRequestClose={() => setModalVisible(false)}
         >
@@ -155,10 +159,8 @@ const ProfileScreen = () => {
         </Modal>
       )}
 
-      {/* Spacer to push version to the bottom */}
       <View style={styles.spacer} />
 
-      {/* App Version */}
       <Text style={[styles.version, isDarkMode ? styles.textDark : styles.textLight]}>
         {strings.appVersion}
       </Text>
@@ -170,115 +172,108 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    marginTop: 15
   },
   containerLight: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
   containerDark: {
-    backgroundColor: '#333',
+    backgroundColor: '#333'
   },
   backButton: {
     position: 'absolute',
     top: 40,
-    left: 10,
-    padding: 10,
-  },
-  backIcon: {
-    width: 24,
-    height: 24,
+    left: 10
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 20,
+    fontWeight: 'bold'
   },
   profileContainer: {
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 20
   },
   profileImage: {
     width: 150,
     height: 150,
     borderRadius: 75,
-    marginBottom: 10,
+    marginBottom: 10
   },
   profileName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   profileId: {
     fontSize: 16,
-    marginVertical: 5,
+    marginVertical: 5
   },
   profileDate: {
     fontSize: 14,
-    color: '#888',
+    color: '#888'
   },
   settingContainer: {
-    marginTop: 20,
+    marginTop: 20
   },
   settingRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    marginVertical: 15
   },
   languageRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   settingLabel: {
-    fontSize: 16,
+    fontSize: 16
   },
   languageOption: {
     fontSize: 16,
     color: '#888',
-    marginRight: 5,
+    marginRight: 5
   },
   spacer: {
-    flex: 1,
+    flex: 1
   },
   version: {
     textAlign: 'center',
-    marginBottom: 0,
     fontSize: 14,
-    color: '#888',
+    color: '#888'
   },
   textLight: {
-    color: '#000',
+    color: '#000'
   },
   textDark: {
-    color: '#fff',
+    color: '#fff'
   },
   modalBackground: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   modalContainer: {
     width: 300,
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 20,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 20
   },
   modalOption: {
     fontSize: 16,
-    paddingVertical: 10,
+    paddingVertical: 10
   },
   modalCancel: {
     fontSize: 16,
     color: 'red',
-    marginTop: 20,
+    marginTop: 20
   },
 });
 
