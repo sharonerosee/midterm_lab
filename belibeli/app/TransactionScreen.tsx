@@ -11,9 +11,11 @@ import {
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useTheme } from './_layout'; // Import useTheme untuk dark mode
 
-const VALID_PREFIXES = ['081', '082', '083', '085', '087', '088']; // Prefix operator resmi di Indonesia
+const VALID_PREFIXES_PULSA = ['081', '082', '083', '085', '087', '088']; // Prefix operator resmi di Indonesia
+const VALID_PREFIXES_LISTRIK = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+const VALID_PREFIXES_BPJS = ['0']
 
-const PULSA_OPTIONS = [
+const PULSA_LISTRIK_OPTIONS = [
   { nominal: 5000, harga: 6500 },
   { nominal: 10000, harga: 11500 },
   { nominal: 15000, harga: 16500 },
@@ -30,6 +32,21 @@ const PULSA_OPTIONS = [
   { nominal: 500000, harga: 501500 },
 ];
 
+const BPJS_OPTIONS = [
+  {nominal: 50000, bulan: '1 Bulan' ,harga: 51500},
+  {nominal: 100000, bulan:'2 Bulan', harga: 101500},
+  {nominal: 150000, bulan: '3 Bulan' ,harga: 151500},
+  {nominal: 200000, bulan:'4 Bulan', harga: 201500},
+  {nominal: 250000, bulan: '5 Bulan' ,harga: 251500},
+  {nominal: 300000, bulan:'6 Bulan', harga: 301500},
+  {nominal: 350000, bulan: '7 Bulan' ,harga: 351500},
+  {nominal: 400000, bulan:'8 Bulan', harga: 401500},
+  {nominal: 450000, bulan: '9 Bulan' ,harga: 451500},
+  {nominal: 500000, bulan:'10 Bulan', harga: 501500},
+  {nominal: 550000, bulan: '11 Bulan' ,harga: 551500},
+  {nominal: 600000, bulan:'12 Bulan', harga: 601500},
+];
+
 const TransactionScreen = () => {
   const route = useRoute();
   const navigation = useNavigation(); // Mengatur header navigasi
@@ -39,7 +56,7 @@ const TransactionScreen = () => {
   const [inputValue, setInputValue] = useState(''); // Menyimpan input dari pengguna
   const [errorMessage, setErrorMessage] = useState(''); // Untuk menampilkan pesan error
   const [isPrefixValid, setIsPrefixValid] = useState(false); // State untuk cek validitas prefix
-  const [selectedTab, setSelectedTab] = useState('Pulsa'); // Tab default adalah "Pulsa" untuk Pulsa & Paket Data
+  const [selectedTab, setSelectedTab] = useState(transactionType);
 
   useEffect(() => {
     // Mengatur header sesuai dengan jenis transaksi
@@ -49,7 +66,7 @@ const TransactionScreen = () => {
       });
     } else {
       navigation.setOptions({
-        title: `${transactionType} Transaction`, // Judul untuk transaksi lainnya
+        title: `${transactionType}`, // Judul untuk transaksi lainnya
       });
     }
 
@@ -64,14 +81,34 @@ const TransactionScreen = () => {
     };
   }, [navigation, transactionType, inputValue]);
 
-  const validatePrefix = (text) => {
+  const validatePrefixPulsa = (text) => {
     // Validasi hanya prefix (cek apakah mulai dengan 081, 082, dll.)
-    if (VALID_PREFIXES.some((prefix) => text.startsWith(prefix))) {
+    if (VALID_PREFIXES_PULSA.some((prefix) => text.startsWith(prefix))) {
       setIsPrefixValid(true);
       setErrorMessage(''); // Jika prefix valid, hapus pesan error
     } else {
       setIsPrefixValid(false);
       setErrorMessage('Hemm, provider-nya ngga ketemu nih. Cek lagi, yaa.');
+    }
+  };
+
+  const validatePrefixListrik = (text) => {
+    if (VALID_PREFIXES_LISTRIK.some((prefix) => text.startsWith(prefix))) {
+      setIsPrefixValid(true);
+      setErrorMessage(''); // Jika prefix valid, hapus pesan error
+    } else {
+      setIsPrefixValid(false);
+      setErrorMessage('Nomor yang kamu masukkan salah nih. Cek lagi, yaa.');
+    }
+  };
+
+  const validatePrefixBPJS = (text) => {
+    if (VALID_PREFIXES_BPJS.some((prefix) => text.startsWith(prefix))) {
+      setIsPrefixValid(true);
+      setErrorMessage(''); // Jika prefix valid, hapus pesan error
+    } else {
+      setIsPrefixValid(false);
+      setErrorMessage('Nomor yang kamu masukkan salah nih. Cek lagi, yaa.');
     }
   };
 
@@ -108,6 +145,17 @@ const TransactionScreen = () => {
     </TouchableOpacity>
   );
 
+  const renderBpjsOption = ({ item }) => (
+    <TouchableOpacity
+      style={styles.optionContainer}
+      onPress={() => handleOptionSelect(item)}
+    >
+      <Text style={styles.optionText}>{item.bulan}</Text>
+      <Text style={styles.optionPrice}>Harga Rp {item.harga.toLocaleString()}</Text>
+    </TouchableOpacity>
+  );
+  
+
   if (transactionType === 'Pulsa' || transactionType === 'Paket Data') {
     // TAMPILAN UNTUK PULSA & PAKET DATA
     return (
@@ -120,7 +168,7 @@ const TransactionScreen = () => {
           value={inputValue}
           onChangeText={(text) => {
             setInputValue(text); // Update input value
-            validatePrefix(text); // Validasi otomatis saat mengetik prefix
+            validatePrefixPulsa(text); // Validasi otomatis saat mengetik prefix
           }}
           placeholder="Contoh: 082370323318"
           placeholderTextColor={isDarkMode ? '#bbb' : '#666'}
@@ -134,8 +182,76 @@ const TransactionScreen = () => {
         {/* Tampilkan pilihan nominal jika prefix valid */}
         {isPrefixValid && (
           <FlatList
-            data={PULSA_OPTIONS}
+            data={PULSA_LISTRIK_OPTIONS}
             renderItem={renderPulsaOption}
+            keyExtractor={(item) => item.nominal.toString()}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
+          />
+        )}
+      </View>
+    );
+  } else if (transactionType === 'Listrik') {
+    return (
+      <View style={[styles.container, isDarkMode ? styles.containerDark : styles.containerLight]}>
+        <Text style={[styles.label, isDarkMode ? styles.textDark : styles.textLight]}>
+          Nomor Token Listrik
+        </Text>
+        <TextInput
+          style={[styles.input, isDarkMode ? styles.inputDark : styles.inputLight]}
+          value={inputValue}
+          onChangeText={(text) => {
+            setInputValue(text); // Update input value
+            validatePrefixListrik(text); // Validasi otomatis saat mengetik prefix
+          }}
+          placeholder="Contoh: 823703233188"
+          placeholderTextColor={isDarkMode ? '#bbb' : '#666'}
+          keyboardType="numeric"
+        />
+        {/* Tampilkan pesan error di bawah input */}
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
+
+        {/* Tampilkan pilihan nominal jika prefix valid */}
+        {isPrefixValid && (
+          <FlatList
+            data={PULSA_LISTRIK_OPTIONS}
+            renderItem={renderPulsaOption}
+            keyExtractor={(item) => item.nominal.toString()}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
+          />
+        )}
+      </View>
+    );
+  } else if (transactionType == 'BPJS'){
+    return (
+      <View style={[styles.container, isDarkMode ? styles.containerDark : styles.containerLight]}>
+        <Text style={[styles.label, isDarkMode ? styles.textDark : styles.textLight]}>
+          Nomor BPJS Kesehatan
+        </Text>
+        <TextInput
+          style={[styles.input, isDarkMode ? styles.inputDark : styles.inputLight]}
+          value={inputValue}
+          onChangeText={(text) => {
+            setInputValue(text); // Update input value
+            validatePrefixBPJS(text); // Validasi otomatis saat mengetik prefix
+          }}
+          placeholder="Contoh: 0551245123255"
+          placeholderTextColor={isDarkMode ? '#bbb' : '#666'}
+          keyboardType="numeric"
+        />
+        {/* Tampilkan pesan error di bawah input */}
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
+
+        {/* Tampilkan pilihan nominal jika prefix valid */}
+        {isPrefixValid && (
+          <FlatList
+            data={BPJS_OPTIONS}
+            renderItem={renderBpjsOption}
             keyExtractor={(item) => item.nominal.toString()}
             numColumns={2}
             columnWrapperStyle={styles.row}
@@ -146,27 +262,27 @@ const TransactionScreen = () => {
   }
 
   // TAMPILAN UNTUK BPJS DAN TOKEN LISTRIK TIDAK BERUBAH
-  return (
-    <View style={[styles.container, isDarkMode ? styles.containerDark : styles.containerLight]}>
-      <Text style={[styles.label, isDarkMode ? styles.textDark : styles.textLight]}>
-        {transactionType === 'Token Listrik' ? 'Masukkan ID Pelanggan' : 'Masukkan Nomor BPJS'}
-      </Text>
-      <TextInput
-        style={[styles.input, isDarkMode ? styles.inputDark : styles.inputLight]}
-        value={inputValue}
-        onChangeText={setInputValue}
-        placeholder={transactionType === 'Token Listrik' ? 'ID Pelanggan' : 'Nomor BPJS'}
-        placeholderTextColor={isDarkMode ? '#bbb' : '#666'}
-        keyboardType="numeric"
-      />
-      <TouchableOpacity
-        style={[styles.button, isDarkMode ? styles.buttonDark : styles.buttonLight]}
-        onPress={handleOptionSelect}
-      >
-        <Text style={styles.buttonText}>Lanjutkan</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  // return (
+  //   <View style={[styles.container, isDarkMode ? styles.containerDark : styles.containerLight]}>
+  //     <Text style={[styles.label, isDarkMode ? styles.textDark : styles.textLight]}>
+  //       {transactionType === 'Token Listrik' ? 'Masukkan ID Pelanggan' : 'Masukkan Nomor BPJS'}
+  //     </Text>
+  //     <TextInput
+  //       style={[styles.input, isDarkMode ? styles.inputDark : styles.inputLight]}
+  //       value={inputValue}
+  //       onChangeText={setInputValue}
+  //       placeholder={transactionType === 'Token Listrik' ? 'ID Pelanggan' : 'Nomor BPJS'}
+  //       placeholderTextColor={isDarkMode ? '#bbb' : '#666'}
+  //       keyboardType="numeric"
+  //     />
+  //     <TouchableOpacity
+  //       style={[styles.button, isDarkMode ? styles.buttonDark : styles.buttonLight]}
+  //       onPress={handleOptionSelect}
+  //     >
+  //       <Text style={styles.buttonText}>Lanjutkan</Text>
+  //     </TouchableOpacity>
+  //   </View>
+  // );
 };
 
 const styles = StyleSheet.create({
