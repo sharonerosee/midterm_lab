@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useTheme } from '../_layout'; // Import useTheme dari ThemeContext
 
-// Debounce function to prevent rapid multiple clicks
+// Fungsi debounce untuk menghindari klik berulang dengan cepat
 const debounce = (func, delay) => {
   let timeoutId;
   return (...args) => {
@@ -16,6 +16,7 @@ const debounce = (func, delay) => {
   };
 };
 
+// String teks untuk bahasa Inggris dan Indonesia, khusus untuk ProfileScreen
 const textStrings = {
   EN: {
     profileTitle: 'Profile',
@@ -46,14 +47,16 @@ const textStrings = {
 };
 
 const ProfileScreen = () => {
-  const { isDarkMode, setIsDarkMode } = useTheme(); // Akses dari ThemeContext
-  const [language, setLanguage] = useState<'EN' | 'ID'>('EN');
-  const [modalVisible, setModalVisible] = useState(false);
+  const { isDarkMode, setIsDarkMode } = useTheme(); // Akses status dark mode
+  const [language, setLanguage] = useState<'EN' | 'ID'>('EN'); // Bahasa diatur secara lokal
+  const [modalVisible, setModalVisible] = useState(false); // Mengatur modal untuk Android
 
   const navigation = useNavigation();
 
-  const toggleDarkMode = () => setIsDarkMode((prev) => !prev); // Fungsi toggle
+  // Fungsi toggle untuk dark mode
+  const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
 
+  // Fungsi debounce untuk menekan tombol back
   const handleBackPress = useCallback(
     debounce(() => {
       navigation.goBack();
@@ -61,13 +64,14 @@ const ProfileScreen = () => {
     [navigation]
   );
 
-  const strings = textStrings[language];
+  const strings = textStrings[language]; // Akses string teks berdasarkan bahasa yang dipilih
 
+  // Fungsi untuk menampilkan pilihan bahasa
   const showLanguageOptions = () => {
     if (Platform.OS === 'ios') {
       ActionSheetIOS.showActionSheetWithOptions(
         {
-          options: ['Cancel', 'English', 'Indonesia'],
+          options: [strings.cancel, strings.english, strings.indonesian],
           cancelButtonIndex: 0,
         },
         (buttonIndex) => {
@@ -80,21 +84,25 @@ const ProfileScreen = () => {
     }
   };
 
+  // Fungsi untuk memilih bahasa
   const selectLanguage = (lang: 'EN' | 'ID') => {
     setLanguage(lang);
-    setModalVisible(false);
+    setModalVisible(false); // Tutup modal setelah memilih bahasa
   };
 
   return (
     <View style={[styles.container, isDarkMode ? styles.containerDark : styles.containerLight]}>
+      {/* Tombol Kembali */}
       <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
         <FontAwesome name="chevron-left" size={24} color={isDarkMode ? 'white' : 'black'} />
       </TouchableOpacity>
 
+      {/* Judul Profil */}
       <Text style={[styles.title, isDarkMode ? styles.textDark : styles.textLight]}>
         {strings.profileTitle}
       </Text>
 
+      {/* Detail Profil */}
       <View style={styles.profileContainer}>
         <Image
           source={{ uri: 'https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/65/2023/09/04/IU-korea-2718228728.jpg' }}
@@ -111,7 +119,9 @@ const ProfileScreen = () => {
         </Text>
       </View>
 
+      {/* Pengaturan Bahasa dan Mode Gelap */}
       <View style={styles.settingContainer}>
+        {/* Pengaturan Bahasa */}
         <TouchableOpacity style={styles.settingRow} onPress={showLanguageOptions}>
           <Text style={[styles.settingLabel, isDarkMode ? styles.textDark : styles.textLight]}>
             {strings.changeLanguage}
@@ -122,6 +132,7 @@ const ProfileScreen = () => {
           </View>
         </TouchableOpacity>
 
+        {/* Pengaturan Mode Gelap */}
         <View style={styles.settingRow}>
           <Text style={[styles.settingLabel, isDarkMode ? styles.textDark : styles.textLight]}>
             {strings.darkMode}
@@ -129,12 +140,13 @@ const ProfileScreen = () => {
           <Switch
             trackColor={{ false: '#767577', true: '#81b0ff' }}
             thumbColor={isDarkMode ? '#f5dd4b' : '#f4f3f4'}
-            onValueChange={toggleDarkMode} // Mengaktifkan toggle
-            value={isDarkMode} // Bind dengan state
+            onValueChange={toggleDarkMode} // Toggle dark mode
+            value={isDarkMode} // Bind dengan state dark mode
           />
         </View>
       </View>
 
+      {/* Modal untuk Android untuk memilih bahasa */}
       {Platform.OS === 'android' && (
         <Modal
           animationType="slide"
@@ -161,6 +173,7 @@ const ProfileScreen = () => {
 
       <View style={styles.spacer} />
 
+      {/* Versi Aplikasi */}
       <Text style={[styles.version, isDarkMode ? styles.textDark : styles.textLight]}>
         {strings.appVersion}
       </Text>
