@@ -130,15 +130,43 @@ const TransactionScreen = () => {
 
   const validateLength = () => {
     // Validasi panjang nomor ketika keyboard ditutup
-    if (inputValue.length > 0 && inputValue.length < 10) {
-      setErrorMessage('Waduh, nomor kamu terlalu pendek nih. Masukkan nomor yang benar yaa.');
+    if (transactionType === 'Pulsa' || transactionType === 'Paket Data') {
+      if (inputValue.length > 0 && (inputValue.length < 10 || inputValue.length > 13)) {
+        setErrorMessage('Nomor tidak valid, harus antara 10-13 digit');
+      } else {
+        setErrorMessage('');
+      }
+    } else if (transactionType === 'Listrik') {
+      if (inputValue.length > 0 && (inputValue.length < 10 || inputValue.length > 12)) {
+        setErrorMessage('Nomor token listrik tidak valid, harus antara 10-12 digit');
+      } else {
+        setErrorMessage('');
+      }
+    } else if (transactionType === 'BPJS') {
+      if (inputValue.length > 0 && (inputValue.length < 10 || inputValue.length > 13)) {
+        setErrorMessage('Nomor BPJS tidak valid, harus antara 10-13 digit');
+      } else {
+        setErrorMessage('');
+      }
     }
   };
 
   const handleOptionSelect = (option) => {
-    if (inputValue.length < 10 || inputValue.length > 13) {
-      setErrorMessage('Nomor tidak valid, harus antara 10-13 digit');
-      return;
+    if (transactionType === 'Pulsa' || transactionType === 'Paket Data') {
+      if (inputValue.length < 10 || inputValue.length > 13) {
+        setErrorMessage('Nomor tidak valid, harus antara 10-13 digit');
+        return;
+      }
+    } else if (transactionType === 'Listrik') {
+      if (inputValue.length < 10 || inputValue.length > 12) {
+        setErrorMessage('Nomor token listrik tidak valid, harus antara 10-12 digit');
+        return;
+      }
+    } else if (transactionType === 'BPJS') {
+      if (inputValue.length < 10 || inputValue.length > 13) {
+        setErrorMessage('Nomor BPJS tidak valid, harus antara 10-13 digit');
+        return;
+      }
     }
 
     navigation.navigate('ConfirmationScreen', {
@@ -171,7 +199,7 @@ const TransactionScreen = () => {
       onPress={() => handleOptionSelect(item)}
     >
       <Text style={[styles.optionText, isDarkMode ? styles.optionTextDark : styles.optionTextLight]}>
-        {item.bulan}
+        {item.name}
       </Text>
       <Text style={[styles.optionPrice, isDarkMode ? styles.optionPriceDark : styles.optionPriceLight]}>
         Harga Rp {item.harga.toLocaleString()}

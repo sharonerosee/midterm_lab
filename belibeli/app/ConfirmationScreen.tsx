@@ -1,41 +1,60 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { useTheme } from './_layout'; // Adjust path to where useTheme is exported
 
 const ConfirmationScreen = () => {
   const route = useRoute();
+  const navigation = useNavigation(); // Add navigation hook
   const { isDarkMode } = useTheme(); // Access dark mode state
   const { transactionType, number, nominal, harga } = route.params;
 
   // Initial balance set to 1,000,000 Rp
   const [balance, setBalance] = useState(1000000);
 
-  const getOperator = (number) => {
-    const prefix = number.substring(0, 3);
-    switch (prefix) {
-      case '081':
-      case '082':
-      case '085':
-        return 'Telkomsel';
-      case '083':
-        return 'Axis';
-      case '089':
-        return 'Tri';
-      default:
-        return 'Operator Tidak Dikenal';
+  const getOperator = (transactionType, number) => {
+    if (transactionType === 'Listrik') {
+      return 'Listrik';
+    } else if (transactionType === 'BPJS') {
+      return 'BPJS';
+    } else {
+      const prefix = number.substring(0, 3);
+      switch (prefix) {
+        case '081':
+        case '082':
+        case '085':
+          return 'Telkomsel';
+        case '083':
+          return 'Axis';
+        case '089':
+          return 'Tri';
+        default:
+          return 'Operator Tidak Dikenal';
+      }
     }
   };
 
-  const operator = getOperator(number);
+  const operator = getOperator(transactionType, number);
 
-  const handlePayment = () => {
-    if (balance >= harga) {
-      setBalance(balance - harga);
-      Alert.alert('Pembayaran diproses', `Saldo tersisa: Rp ${(balance - harga).toLocaleString()}`);
+  // Dynamically select icon based on transaction type
+  const getOperatorIcon = () => {
+    if (transactionType === 'Listrik') {
+      return 'https://img.icons8.com/ios-filled/50/000000/electrical.png'; // Replace with your own icon URL for Listrik
+    } else if (transactionType === 'BPJS') {
+      return 'https://img.icons8.com/ios-filled/50/000000/shield.png'; // Replace with your own icon URL for BPJS
     } else {
-      Alert.alert('Saldo tidak cukup', 'Saldo Anda tidak mencukupi untuk melakukan pembayaran.');
+      return 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgBAgYhXNZNpyzbQ0QT8JGNu-pGxrdNsyrOM925Ph9tVxixo7LfhU-IQ4EEQDbM0fiBhXtKvgpb_D2hmKYVbluGzTW-sdlfLOJ8cTtyq9S6vltSDWiJpC2r5c_pjy3WylLTQ6eI7UD88zn4ZQBBq6jitdMjtB6gnb0-25WnY3Em3Tw7BQXgOtyPZN0T/s320/GKL1_Telkomsel%20-%20Koleksilogo.com.jpg'; // Telkomsel logo as default
     }
+  };
+
+  // Handle payment and navigate to PinInputScreen
+  const handlePayment = () => {
+    navigation.navigate('PinInput', {
+      transactionType: transactionType,
+      number: number,
+      nominal: nominal,
+      harga: harga,
+    });
   };
 
   return (
@@ -44,7 +63,7 @@ const ConfirmationScreen = () => {
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={[styles.operatorContainer, isDarkMode && styles.operatorContainerDark]}>
           <Image
-            source={{ uri: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgBAgYhXNZNpyzbQ0QT8JGNu-pGxrdNsyrOM925Ph9tVxixo7LfhU-IQ4EEQDbM0fiBhXtKvgpb_D2hmKYVbluGzTW-sdlfLOJ8cTtyq9S6vltSDWiJpC2r5c_pjy3WylLTQ6eI7UD88zn4ZQBBq6jitdMjtB6gnb0-25WnY3Em3Tw7BQXgOtyPZN0T/s320/GKL1_Telkomsel%20-%20Koleksilogo.com.jpg' }} // Replace with operator logo
+            source={{ uri: getOperatorIcon() }} // Dynamically load the appropriate icon based on transaction type
             style={styles.operatorIcon}
           />
           <View>
