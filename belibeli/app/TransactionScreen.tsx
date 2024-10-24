@@ -347,80 +347,81 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   containerLight: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f0f8ff', // Latar belakang yang lebih segar
   },
   containerDark: {
-    backgroundColor: '#333',
+    backgroundColor: '#1c1c1e', // Lebih gelap di dark mode
   },
   label: {
     fontSize: 16,
     marginBottom: 10,
+    fontWeight: 'bold',
   },
   textLight: {
-    color: '#000',
+    color: '#333', // Teks yang lebih halus di mode terang
   },
   textDark: {
-    color: '#fff',
+    color: '#f5f5f5', // Teks yang lebih lembut di mode gelap
   },
   input: {
     borderWidth: 1,
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 15,
+    fontSize: 16,
   },
   inputLight: {
-    borderColor: '#ccc',
-    backgroundColor: '#fff',
+    borderColor: '#a0c4ff', // Warna lebih cerah dan modern untuk input di light mode
+    backgroundColor: '#ffffff',
   },
   inputDark: {
-    borderColor: '#555',
-    backgroundColor: '#444',
+    borderColor: '#374151', // Warna lebih kalem di dark mode
+    backgroundColor: '#2c2c2e',
   },
   errorText: {
-    color: 'red',
+    color: '#ff4d4f', // Warna merah yang lebih menarik untuk error
     marginBottom: 10,
   },
   optionContainer: {
-    backgroundColor: '#fff',
     padding: 20,
     margin: 5,
-    borderRadius: 10,
-    flex: 1,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: '#ccc',
     borderWidth: 1,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 5,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
   optionContainerLight: {
-    backgroundColor: '#fff',
+    backgroundColor: '#e0f7fa', // Warna biru muda yang lebih segar untuk light mode
+    borderColor: '#80deea',
   },
   optionContainerDark: {
-    backgroundColor: '#444',
+    backgroundColor: '#263238', // Warna lebih dramatis untuk dark mode
+    borderColor: '#546e7a',
   },
   optionText: {
     fontSize: 16,
     fontWeight: 'bold',
   },
   optionTextLight: {
-    color: '#000',
+    color: '#00796b', // Warna hijau yang segar
   },
   optionTextDark: {
-    color: '#fff',
+    color: '#aed581', // Warna hijau lembut untuk dark mode
   },
   optionPrice: {
     fontSize: 14,
     marginTop: 5,
   },
   optionPriceLight: {
-    color: '#555',
+    color: '#004d40', // Teks harga yang lebih menonjol di light mode
   },
   optionPriceDark: {
-    color: '#bbb',
+    color: '#cfd8dc', // Teks harga yang lebih jelas di dark mode
   },
   row: {
     justifyContent: 'space-between',
@@ -431,33 +432,33 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 5,
+    borderRadius: 10,
   },
   activeButton: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#29b6f6', // Warna biru terang untuk tombol aktif di light mode
   },
   activeButtonDark: {
-    backgroundColor: '#666',
+    backgroundColor: '#039be5', // Warna biru tua untuk tombol aktif di dark mode
   },
   inactiveButton: {
-    backgroundColor: '#eee',
+    backgroundColor: '#e1f5fe', // Warna tombol inaktif yang lebih cerah di light mode
   },
   inactiveButtonDark: {
-    backgroundColor: '#555',
+    backgroundColor: '#455a64', // Warna tombol inaktif di dark mode
   },
   activeText: {
-    color: '#000',
+    color: '#ffffff', // Teks putih untuk tombol aktif
     fontWeight: 'bold',
   },
   activeTextDark: {
-    color: '#fff',
+    color: '#ffffff',
     fontWeight: 'bold',
   },
   inactiveText: {
-    color: '#666',
+    color: '#9e9e9e', // Teks abu-abu untuk tombol inaktif
   },
 });
 

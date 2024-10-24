@@ -1,12 +1,32 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { addTransaction } from './actions'; // Aksi untuk menambah transaksi
 
 const TransactionResultScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  
+  const dispatch = useDispatch(); // Mengakses dispatch dari Redux
+
   const { success, remainingBalance, amount } = route.params;
+
+  // Data transaksi yang akan dikirim ke riwayat
+  const transaction = {
+    id: new Date().getTime().toString(), // Menghasilkan ID unik
+    status: success ? 'success' : 'failed',
+    amount: amount,
+    remainingBalance: remainingBalance,
+    date: new Date().toLocaleDateString(), // Tanggal saat ini
+  };
+
+  const handleGoBack = () => {
+    // Dispatch aksi untuk menambahkan transaksi ke Redux
+    dispatch(addTransaction(transaction));
+    
+    // Navigasi ke halaman riwayat
+    navigation.navigate('Riwayat');
+  };
 
   return (
     <View style={styles.container}>
@@ -25,7 +45,7 @@ const TransactionResultScreen = () => {
 
       <TouchableOpacity 
         style={styles.button}
-        onPress={() => navigation.goBack()}
+        onPress={handleGoBack}
       >
         <Text style={styles.buttonText}>Kembali</Text>
       </TouchableOpacity>
