@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { LinearGradient } from 'expo-linear-gradient'; // Untuk gradasi background
 import { useTheme } from '../_layout'; // Import useTheme dari ThemeContext
 
 // Fungsi debounce untuk menghindari klik berulang dengan cepat
@@ -91,7 +92,11 @@ const ProfileScreen = () => {
   };
 
   return (
-    <View style={[styles.container, isDarkMode ? styles.containerDark : styles.containerLight]}>
+    <LinearGradient
+      // Menggunakan warna gradasi soft sebelumnya untuk light mode
+      colors={isDarkMode ? ['#2d2d2d', '#5a1f5c'] : ['#f7d1e3', '#fef6e4', '#d4fcf8']}
+      style={styles.container}
+    >
       {/* Tombol Kembali */}
       <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
         <FontAwesome name="chevron-left" size={24} color={isDarkMode ? 'white' : 'black'} />
@@ -177,7 +182,7 @@ const ProfileScreen = () => {
       <Text style={[styles.version, isDarkMode ? styles.textDark : styles.textLight]}>
         {strings.appVersion}
       </Text>
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -185,108 +190,102 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginTop: 15
-  },
-  containerLight: {
-    backgroundColor: '#f5f5f5'
-  },
-  containerDark: {
-    backgroundColor: '#333'
+    justifyContent: 'center',
   },
   backButton: {
     position: 'absolute',
     top: 40,
-    left: 10
+    left: 10,
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     textAlign: 'center',
     marginVertical: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   profileContainer: {
     alignItems: 'center',
-    marginVertical: 20
+    marginVertical: 20,
   },
   profileImage: {
     width: 150,
     height: 150,
     borderRadius: 75,
-    marginBottom: 10
+    marginBottom: 10,
   },
   profileName: {
-    fontSize: 18,
-    fontWeight: 'bold'
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   profileId: {
     fontSize: 16,
-    marginVertical: 5
+    marginVertical: 5,
   },
   profileDate: {
     fontSize: 14,
-    color: '#888'
+    color: '#888',
   },
   settingContainer: {
-    marginTop: 20
+    marginTop: 20,
   },
   settingRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 15
+    marginVertical: 15,
   },
   languageRow: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   settingLabel: {
-    fontSize: 16
+    fontSize: 16,
   },
   languageOption: {
     fontSize: 16,
     color: '#888',
-    marginRight: 5
+    marginRight: 5,
   },
   spacer: {
-    flex: 1
+    flex: 1,
   },
   version: {
     textAlign: 'center',
     fontSize: 14,
-    color: '#888'
+    color: '#888',
   },
   textLight: {
-    color: '#000'
+    color: '#000', // Teks gelap di light mode
   },
   textDark: {
-    color: '#fff'
+    color: '#ffcccc', // Teks pink di dark mode
   },
   modalBackground: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
     width: 300,
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 20,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 20
+    marginBottom: 20,
   },
   modalOption: {
     fontSize: 16,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   modalCancel: {
     fontSize: 16,
     color: 'red',
-    marginTop: 20
+    marginTop: 20,
   },
 });
 

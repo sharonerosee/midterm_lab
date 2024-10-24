@@ -1,20 +1,50 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons'; // Pastikan FontAwesome5 digunakan
-
+import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient'; // Untuk gradasi
 import { useTheme } from '../_layout'; // Import useTheme untuk dark mode
 
 const HomeScreen = () => {
-  const { isDarkMode } = useTheme(); // Akses status dark mode dari context
+  const { isDarkMode } = useTheme(); // Mengakses status dark mode dari context
   const navigation = useNavigation();
+
+  const floatAnim = useRef(new Animated.Value(0)).current; // Inisialisasi floatAnim dengan Animated.Value
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 25,
+          duration: 900,
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0, 
+          duration: 900,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [floatAnim]);
 
   const navigateToTransaction = (transactionType: string) => {
     navigation.navigate('TransactionScreen', { transactionType });
   };
 
   return (
-    <View style={[styles.container, isDarkMode ? styles.containerDark : styles.containerLight]}>
+    <LinearGradient
+      // Gradasi lembut dengan warna pastel untuk light mode, lebih gelap dan subtle untuk dark mode
+      colors={isDarkMode ? ['#2c2c2e', '#5a1f5c'] : ['#f7d1e3', '#fef6e4', '#d4fcf8']}
+      style={styles.container}
+    >
+      {/* Logo dengan animasi floating */}
+      <Animated.Image
+        source={require('../../assets/images/union.png')} // Pastikan path logo benar
+        style={[styles.logo, { transform: [{ translateY: floatAnim }] }]} // Menambahkan animasi floating
+        resizeMode="contain"
+      />
+
       <Text style={[styles.title, isDarkMode ? styles.textDark : styles.textLight]}>
         All-U-Need
       </Text>
@@ -37,7 +67,7 @@ const HomeScreen = () => {
             style={styles.iconButton}
             onPress={() => navigateToTransaction('Transfer')}
           >
-            <MaterialIcons name="arrow-upward" size={24} color={isDarkMode ? '#fff' : '#666'} />
+            <MaterialIcons name="arrow-upward" size={28} color={isDarkMode ? '#ffb6c1' : '#ff6b81'} />
             <Text style={[styles.iconText, isDarkMode ? styles.textDark : styles.textLight]}>
               Transfer
             </Text>
@@ -49,7 +79,7 @@ const HomeScreen = () => {
             style={styles.iconButton}
             onPress={() => navigateToTransaction('Tarik Tunai')}
           >
-            <MaterialIcons name="arrow-downward" size={24} color={isDarkMode ? '#fff' : '#666'} />
+            <MaterialIcons name="arrow-downward" size={28} color={isDarkMode ? '#ffb6c1' : '#ff6b81'} />
             <Text style={[styles.iconText, isDarkMode ? styles.textDark : styles.textLight]}>
               Tarik Tunai
             </Text>
@@ -61,7 +91,7 @@ const HomeScreen = () => {
             style={styles.iconButton}
             onPress={() => navigateToTransaction('More')}
           >
-            <MaterialIcons name="more-horiz" size={24} color={isDarkMode ? '#fff' : '#666'} />
+            <MaterialIcons name="more-horiz" size={28} color={isDarkMode ? '#ffb6c1' : '#ff6b81'} />
             <Text style={[styles.iconText, isDarkMode ? styles.textDark : styles.textLight]}>
               More
             </Text>
@@ -78,7 +108,7 @@ const HomeScreen = () => {
           ]}
           onPress={() => navigateToTransaction('Pulsa')}
         >
-          <MaterialIcons name="smartphone" size={32} color={isDarkMode ? '#fff' : '#666'} />
+          <MaterialIcons name="smartphone" size={32} color={isDarkMode ? '#c1c8e4' : '#89b7eb'} />
           <Text style={[styles.roundButtonText, isDarkMode ? styles.textDark : styles.textLight]}>
             Pulsa/Data
           </Text>
@@ -91,7 +121,7 @@ const HomeScreen = () => {
           ]}
           onPress={() => navigateToTransaction('Listrik')}
         >
-          <FontAwesome5 name="bolt" size={32} color={isDarkMode ? '#fff' : '#666'} />
+          <FontAwesome5 name="bolt" size={32} color={isDarkMode ? '#c1c8e4' : '#89b7eb'} />
           <Text style={[styles.roundButtonText, isDarkMode ? styles.textDark : styles.textLight]}>
             Listrik
           </Text>
@@ -104,13 +134,13 @@ const HomeScreen = () => {
           ]}
           onPress={() => navigateToTransaction('BPJS')}
         >
-          <FontAwesome5 name="shield-alt" size={32} color={isDarkMode ? '#fff' : '#666'} />
+          <FontAwesome5 name="shield-alt" size={32} color={isDarkMode ? '#c1c8e4' : '#89b7eb'} />
           <Text style={[styles.roundButtonText, isDarkMode ? styles.textDark : styles.textLight]}>
             BPJS
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -118,52 +148,53 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  containerLight: {
-    backgroundColor: '#f5f5f5',
-  },
-  containerDark: {
-    backgroundColor: '#333',
+  logo: {
+    width: 140, // Ukuran logo lebih kecil agar proporsional
+    height: 140,
+    marginBottom: 20,
   },
   title: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    fontSize: 24,
+    fontSize: 28, // Font yang lebih besar dan bold
     fontWeight: 'bold',
-    marginTop: 40,
+    marginBottom: 30,
+    letterSpacing: 1.2,
   },
   card: {
-    width: '95%',
-    borderRadius: 15,
-    padding: 20,
-    marginTop: 100,
-    marginBottom: 10,
+    width: '90%',
+    borderRadius: 18,
+    padding: 25,
+    marginVertical: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   cardLight: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff', // Warna netral untuk light mode
   },
   cardDark: {
-    backgroundColor: '#444',
+    backgroundColor: '#444', // Warna pink tua/gelap untuk dark mode
   },
   header: {
     alignItems: 'flex-start',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   subtitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 20, // Ukuran font lebih besar
+    fontWeight: '600',
     marginBottom: 5,
   },
   year: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: 14,
+    color: '#888',
   },
   horizontalLine: {
     height: 1,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#89b7eb', // Warna mint/light blue yang menenangkan
     width: '100%',
     marginVertical: 10,
   },
@@ -171,7 +202,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginTop: 10,
+    marginTop: 15,
   },
   iconButton: {
     alignItems: 'center',
@@ -179,44 +210,50 @@ const styles = StyleSheet.create({
   },
   verticalLine: {
     width: 1,
-    backgroundColor: '#e0e0e0',
-    height: '120%',
+    backgroundColor: '#89b7eb', // Garis vertikal soft blue
+    height: '80%',
   },
   iconText: {
-    marginTop: 5,
-    fontSize: 14,
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: '600',
   },
   transactionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    marginTop: 40,
+    marginTop: 50,
   },
   roundButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 25,
+    width: 95,
+    height: 95,
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
+    marginHorizontal: 20,
   },
   roundButtonLight: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff5f7', // Soft pink untuk light mode
   },
   roundButtonDark: {
-    backgroundColor: '#555',
+    backgroundColor: '#5c2a2d', // Pink gelap untuk dark mode
   },
   roundButtonText: {
-    marginTop: 5,
-    fontSize: 12,
+    marginTop: 10,
+    fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   textLight: {
-    color: '#000',
+    color: '#000', // Teks gelap di light mode
   },
   textDark: {
-    color: '#fff',
+    color: '#ffcccc', // Teks pink di dark mode
   },
 });
 
