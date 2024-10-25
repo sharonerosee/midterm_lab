@@ -48,8 +48,8 @@ const textStrings = {
 };
 
 const ProfileScreen = () => {
-  const { isDarkMode, setIsDarkMode } = useTheme(); 
-  const [language, setLanguage] = useState<'EN' | 'ID'>('EN'); 
+  const { isDarkMode, setIsDarkMode } = useTheme();
+  const [language, setLanguage] = useState<'EN' | 'ID'>('EN');
   const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
@@ -63,7 +63,7 @@ const ProfileScreen = () => {
     [navigation]
   );
 
-  const strings = textStrings[language]; 
+  const strings = textStrings[language];
 
   const showLanguageOptions = () => {
     if (Platform.OS === 'ios') {
@@ -82,10 +82,10 @@ const ProfileScreen = () => {
     }
   };
 
-  
+
   const selectLanguage = (lang: 'EN' | 'ID') => {
     setLanguage(lang);
-    setModalVisible(false); 
+    setModalVisible(false);
   };
 
   return (
@@ -118,7 +118,6 @@ const ProfileScreen = () => {
       </View>
 
       <View style={styles.settingContainer}>
-        {/* Pengaturan Bahasa */}
         <TouchableOpacity style={styles.settingRow} onPress={showLanguageOptions}>
           <Text style={[styles.settingLabel, isDarkMode ? styles.textDark : styles.textLight]}>
             {strings.changeLanguage}
@@ -136,13 +135,12 @@ const ProfileScreen = () => {
           <Switch
             trackColor={{ false: '#767577', true: '#81b0ff' }}
             thumbColor={isDarkMode ? '#f5dd4b' : '#f4f3f4'}
-            onValueChange={toggleDarkMode} // Toggle dark mode
-            value={isDarkMode} // Bind dengan state dark mode
+            onValueChange={toggleDarkMode}
+            value={isDarkMode}
           />
         </View>
       </View>
 
-      {/* Modal untuk Android untuk memilih bahasa */}
       {Platform.OS === 'android' && (
         <Modal
           animationType="slide"
@@ -246,10 +244,10 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   textLight: {
-    color: '#000', // Teks gelap di light mode
+    color: '#000',
   },
   textDark: {
-    color: '#ffcccc', // Teks pink di dark mode
+    color: '#ffcccc',
   },
   modalBackground: {
     flex: 1,

@@ -5,14 +5,13 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState, createContext, useContext } from 'react';
 import 'react-native-reanimated';
 
-// Membuat Context untuk tema dan bahasa
 const ThemeContext = createContext();
 const LanguageContext = createContext(); 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [isDarkMode, setIsDarkMode] = useState(false); // State untuk dark mode
-  const [language, setLanguage] = useState('EN'); // Tambahkan state untuk bahasa
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [language, setLanguage] = useState('EN');
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -30,7 +29,6 @@ export default function RootLayout() {
   return (
     <ThemeContext.Provider value={{ isDarkMode, setIsDarkMode }}>
       <LanguageContext.Provider value={{ language, setLanguage }}> 
-        {/* Tambahkan provider bahasa */}
         <ThemeProvider value={isDarkMode ? DarkTheme : DefaultTheme}>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -42,6 +40,5 @@ export default function RootLayout() {
   );
 }
 
-// Custom hooks untuk tema dan bahasa
 export const useTheme = () => useContext(ThemeContext);
 export const useLanguage = () => useContext(LanguageContext);

@@ -4,7 +4,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '../_layout'; 
 import { LinearGradient } from 'expo-linear-gradient'; 
 
-// Daftar promo menarik
 const promoList = [
   { id: '1', title: 'Promo Grab 50% Diskon', description: 'Nikmati diskon 50% untuk semua perjalanan dengan Grab.', type: 'grab' },
   { id: '2', title: 'Promo Gojek Cashback 30%', description: 'Cashback 30% untuk semua layanan Gojek.', type: 'gojek' },

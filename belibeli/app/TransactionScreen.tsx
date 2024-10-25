@@ -9,9 +9,9 @@ import {
   Keyboard,
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { useTheme } from './_layout'; // Import useTheme untuk dark mode
+import { useTheme } from './_layout';
 
-const VALID_PREFIXES_PULSA = ['081', '082', '083', '085', '087', '088']; // Prefix operator resmi di Indonesia
+const VALID_PREFIXES_PULSA = ['081', '082', '083', '085', '087', '088'];
 const VALID_PREFIXES_LISTRIK = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const VALID_PREFIXES_BPJS = ['0'];
 
@@ -66,33 +66,30 @@ const BPJS_OPTIONS = [
 
 const TransactionScreen = () => {
   const route = useRoute();
-  const navigation = useNavigation(); // Mengatur header navigasi
+  const navigation = useNavigation();
   const { transactionType } = route.params;
-  const { isDarkMode } = useTheme(); // Akses status dark mode
+  const { isDarkMode } = useTheme();
 
-  const [inputValue, setInputValue] = useState(''); // Menyimpan input dari pengguna
-  const [errorMessage, setErrorMessage] = useState(''); // Untuk menampilkan pesan error
-  const [isPrefixValid, setIsPrefixValid] = useState(false); // State untuk cek validitas prefix
-  const [selectedTab, setSelectedTab] = useState(transactionType); // State untuk tab toggle
+  const [inputValue, setInputValue] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isPrefixValid, setIsPrefixValid] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(transactionType);
 
   useEffect(() => {
-    // Mengatur header sesuai dengan jenis transaksi
     if (transactionType === 'Pulsa' || transactionType === 'Paket Data') {
       navigation.setOptions({
-        title: 'Pulsa & Paket Data', // Judul untuk Pulsa dan Paket Data
+        title: 'Pulsa & Paket Data',
       });
     } else {
       navigation.setOptions({
-        title: `${transactionType}`, // Judul untuk transaksi lainnya
+        title: `${transactionType}`,
       });
     }
 
-    // Menambahkan event listener untuk keyboard hide
     const keyboardListener = Keyboard.addListener('keyboardDidHide', () => {
-      validateLength(); // Jalankan validasi ketika keyboard disembunyikan
+      validateLength();
     });
 
-    // Cleanup event listener saat component unmount
     return () => {
       keyboardListener.remove();
     };
@@ -101,7 +98,7 @@ const TransactionScreen = () => {
   const validatePrefixPulsa = (text) => {
     if (VALID_PREFIXES_PULSA.some((prefix) => text.startsWith(prefix))) {
       setIsPrefixValid(true);
-      setErrorMessage(''); // Jika prefix valid, hapus pesan error
+      setErrorMessage('');
     } else {
       setIsPrefixValid(false);
       setErrorMessage('Hemm, provider-nya ngga ketemu nih. Cek lagi, yaa.');
@@ -111,7 +108,7 @@ const TransactionScreen = () => {
   const validatePrefixListrik = (text) => {
     if (VALID_PREFIXES_LISTRIK.some((prefix) => text.startsWith(prefix))) {
       setIsPrefixValid(true);
-      setErrorMessage(''); // Jika prefix valid, hapus pesan error
+      setErrorMessage('');
     } else {
       setIsPrefixValid(false);
       setErrorMessage('Nomor yang kamu masukkan salah nih. Cek lagi, yaa.');
@@ -121,7 +118,7 @@ const TransactionScreen = () => {
   const validatePrefixBPJS = (text) => {
     if (VALID_PREFIXES_BPJS.some((prefix) => text.startsWith(prefix))) {
       setIsPrefixValid(true);
-      setErrorMessage(''); // Jika prefix valid, hapus pesan error
+      setErrorMessage('');
     } else {
       setIsPrefixValid(false);
       setErrorMessage('Nomor yang kamu masukkan salah nih. Cek lagi, yaa.');
@@ -217,8 +214,8 @@ const TransactionScreen = () => {
               ? styles.activeButtonDark
               : styles.activeButton
             : isDarkMode
-            ? styles.inactiveButtonDark
-            : styles.inactiveButton,
+              ? styles.inactiveButtonDark
+              : styles.inactiveButton,
         ]}
         onPress={() => setSelectedTab('Pulsa')}
       >
@@ -236,8 +233,8 @@ const TransactionScreen = () => {
               ? styles.activeButtonDark
               : styles.activeButton
             : isDarkMode
-            ? styles.inactiveButtonDark
-            : styles.inactiveButton,
+              ? styles.inactiveButtonDark
+              : styles.inactiveButton,
         ]}
         onPress={() => setSelectedTab('Paket Data')}
       >
@@ -347,10 +344,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   containerLight: {
-    backgroundColor: '#f0f8ff', // Latar belakang yang lebih segar
+    backgroundColor: '#f0f8ff',
   },
   containerDark: {
-    backgroundColor: '#1c1c1e', // Lebih gelap di dark mode
+    backgroundColor: '#1c1c1e',
   },
   label: {
     fontSize: 16,
@@ -358,10 +355,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   textLight: {
-    color: '#333', // Teks yang lebih halus di mode terang
+    color: '#333',
   },
   textDark: {
-    color: '#f5f5f5', // Teks yang lebih lembut di mode gelap
+    color: '#f5f5f5',
   },
   input: {
     borderWidth: 1,
@@ -371,15 +368,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputLight: {
-    borderColor: '#a0c4ff', // Warna lebih cerah dan modern untuk input di light mode
+    borderColor: '#a0c4ff',
     backgroundColor: '#ffffff',
   },
   inputDark: {
-    borderColor: '#374151', // Warna lebih kalem di dark mode
+    borderColor: '#374151',
     backgroundColor: '#2c2c2e',
   },
   errorText: {
-    color: '#ff4d4f', // Warna merah yang lebih menarik untuk error
+    color: '#ff4d4f',
     marginBottom: 10,
   },
   optionContainer: {
@@ -396,11 +393,11 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   optionContainerLight: {
-    backgroundColor: '#e0f7fa', // Warna biru muda yang lebih segar untuk light mode
+    backgroundColor: '#e0f7fa',
     borderColor: '#80deea',
   },
   optionContainerDark: {
-    backgroundColor: '#263238', // Warna lebih dramatis untuk dark mode
+    backgroundColor: '#263238',
     borderColor: '#546e7a',
   },
   optionText: {
@@ -408,20 +405,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   optionTextLight: {
-    color: '#00796b', // Warna hijau yang segar
+    color: '#00796b',
   },
   optionTextDark: {
-    color: '#aed581', // Warna hijau lembut untuk dark mode
+    color: '#aed581',
   },
   optionPrice: {
     fontSize: 14,
     marginTop: 5,
   },
   optionPriceLight: {
-    color: '#004d40', // Teks harga yang lebih menonjol di light mode
+    color: '#004d40',
   },
   optionPriceDark: {
-    color: '#cfd8dc', // Teks harga yang lebih jelas di dark mode
+    color: '#cfd8dc',
   },
   row: {
     justifyContent: 'space-between',
@@ -438,19 +435,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   activeButton: {
-    backgroundColor: '#29b6f6', // Warna biru terang untuk tombol aktif di light mode
+    backgroundColor: '#29b6f6',
   },
   activeButtonDark: {
-    backgroundColor: '#039be5', // Warna biru tua untuk tombol aktif di dark mode
+    backgroundColor: '#039be5',
   },
   inactiveButton: {
-    backgroundColor: '#e1f5fe', // Warna tombol inaktif yang lebih cerah di light mode
+    backgroundColor: '#e1f5fe',
   },
   inactiveButtonDark: {
-    backgroundColor: '#455a64', // Warna tombol inaktif di dark mode
+    backgroundColor: '#455a64',
   },
   activeText: {
-    color: '#ffffff', // Teks putih untuk tombol aktif
+    color: '#ffffff',
     fontWeight: 'bold',
   },
   activeTextDark: {
@@ -458,7 +455,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   inactiveText: {
-    color: '#9e9e9e', // Teks abu-abu untuk tombol inaktif
+    color: '#9e9e9e',
   },
 });
 

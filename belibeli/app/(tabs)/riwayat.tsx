@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../_layout';
-import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient untuk gradasi
+import { LinearGradient } from 'expo-linear-gradient'; 
 
 const Riwayat = () => {
   const navigation = useNavigation();
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    paddingTop: 60, // Menambahkan jarak lebih ke bawah
+    paddingTop: 60, 
   },
   promoList: {
     paddingBottom: 30,

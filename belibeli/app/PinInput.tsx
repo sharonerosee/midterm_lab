@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Keyboard } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme } from './_layout'; // Import the useTheme hook
+import { useTheme } from './_layout'; 
 
 const PinInputScreen = () => {
   const [pin, setPin] = useState('');
@@ -9,9 +9,9 @@ const PinInputScreen = () => {
   const [attempts, setAttempts] = useState(0);
   const [showRedDots, setShowRedDots] = useState(false);
 
-  const { isDarkMode } = useTheme(); // Get current theme mode
+  const { isDarkMode } = useTheme(); 
   const maxAttempts = 3;
-  const birthDatePin = '221104'; // Incorrect PIN
+  const birthDatePin = '221104'; 
   const transactionAmount = 6500;
   const initialBalance = 1000000;
   const navigation = useNavigation();
@@ -26,7 +26,7 @@ const PinInputScreen = () => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: '', // Hide header title
+      headerTitle: '', 
     });
 
     const keyboardListener = Keyboard.addListener('keyboardDidHide', () => {
