@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from './_layout'; 
@@ -14,6 +14,12 @@ const TransactionResultScreen = () => {
     navigation.navigate('index'); 
   };
 
+  useEffect(()=>{
+    navigation.setOptions({
+      headerTitle: '', 
+  })
+  })
+  
   return (
     <LinearGradient
       colors={isDarkMode ? ['#232526', '#414345'] : ['#FFEFBA', '#FFFFFF']}

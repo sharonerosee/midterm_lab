@@ -103,9 +103,12 @@ const ProfileScreen = () => {
 
       <View style={styles.profileContainer}>
         <Image
-          source={{ uri: 'https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/65/2023/09/04/IU-korea-2718228728.jpg' }}
+          source={require('../../assets/images/foto.png')}
           style={styles.profileImage}
         />
+
+        
+
         <Text style={[styles.profileName, isDarkMode ? styles.textDark : styles.textLight]}>
           {strings.profileName}
         </Text>
