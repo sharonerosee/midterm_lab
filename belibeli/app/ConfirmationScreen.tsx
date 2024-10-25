@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useTheme } from './_layout'; // Adjust path to where useTheme is exported
+import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient for background gradients
 
 const ConfirmationScreen = () => {
   const route = useRoute();
@@ -12,6 +13,7 @@ const ConfirmationScreen = () => {
   // Initial balance set to 1,000,000 Rp
   const [balance, setBalance] = useState(1000000);
 
+  // Fungsi untuk mendapatkan operator berdasarkan nomor dan tipe transaksi
   const getOperator = (transactionType, number) => {
     if (transactionType === 'Listrik') {
       return 'Listrik';
@@ -28,23 +30,50 @@ const ConfirmationScreen = () => {
           return 'Axis';
         case '089':
           return 'Tri';
+        case '088':
+          return 'SmartFren';
         default:
           return 'Operator Tidak Dikenal';
       }
     }
   };
 
+  // Mengatur title halaman di header
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Konfirmasi Pembayaran',
+    });
+  }, [navigation]);
+
   const operator = getOperator(transactionType, number);
 
-  // Dynamically select icon based on transaction type
+  // Fungsi untuk mendapatkan URL logo operator berdasarkan tipe transaksi
   const getOperatorIcon = () => {
     if (transactionType === 'Listrik') {
-      return 'https://img.icons8.com/ios-filled/50/000000/electrical.png'; // Replace with your own icon URL for Listrik
+      return 'https://dataset.jogjakota.go.id/uploads/group/2023-11-09-043411.205898LogoPLN.png'; // Logo PLN
     } else if (transactionType === 'BPJS') {
-      return 'https://img.icons8.com/ios-filled/50/000000/shield.png'; // Replace with your own icon URL for BPJS
+      return 'https://fahum.umsu.ac.id/blog/wp-content/uploads/2024/07/cara-mendaftar-dan-membayar-tagihan-bpjs-secara-online-2024.jpg'; // Logo BPJS
     } else {
-      return 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgBAgYhXNZNpyzbQ0QT8JGNu-pGxrdNsyrOM925Ph9tVxixo7LfhU-IQ4EEQDbM0fiBhXtKvgpb_D2hmKYVbluGzTW-sdlfLOJ8cTtyq9S6vltSDWiJpC2r5c_pjy3WylLTQ6eI7UD88zn4ZQBBq6jitdMjtB6gnb0-25WnY3Em3Tw7BQXgOtyPZN0T/s320/GKL1_Telkomsel%20-%20Koleksilogo.com.jpg'; // Telkomsel logo as default
+      switch (operator) {
+        case 'Telkomsel':
+          return 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgBAgYhXNZNpyzbQ0QT8JGNu-pGxrdNsyrOM925Ph9tVxixo7LfhU-IQ4EEQDbM0fiBhXtKvgpb_D2hmKYVbluGzTW-sdlfLOJ8cTtyq9S6vltSDWiJpC2r5c_pjy3WylLTQ6eI7UD88zn4ZQBBq6jitdMjtB6gnb0-25WnY3Em3Tw7BQXgOtyPZN0T/s320/GKL1_Telkomsel%20-%20Koleksilogo.com.jpg'; // Logo Telkomsel
+        case 'Axis':
+          return 'https://isipulsa.web.id/images/produk/paket_internet/axis.png'; // Logo Axis
+        case 'Tri':
+          return 'https://upload.wikimedia.org/wikipedia/id/thumb/6/68/3-brand.svg/1200px-3-brand.svg.png'; // Logo Tri
+        case 'SmartFren':
+          return 'https://storage.googleapis.com/ekrutassets/blogs/images/000/005/202/original/Smartfren-Logo.wine.png'; // Logo Smartfren
+        default:
+          return 'https://img.icons8.com/ios-filled/50/000000/question-mark.png'; // Default icon for unknown operator
+      }
     }
+  };
+
+  // Fungsi untuk mendapatkan ikon wallet berbeda untuk dark mode dan light mode
+  const getWalletIcon = () => {
+    return isDarkMode
+      ? 'https://img.icons8.com/ios-filled/50/ffffff/wallet.png' // White wallet icon for dark mode
+      : 'https://img.icons8.com/ios-filled/50/000000/wallet.png'; // Black wallet icon for light mode
   };
 
   // Handle payment and navigate to PinInputScreen
@@ -58,13 +87,17 @@ const ConfirmationScreen = () => {
   };
 
   return (
-    <View style={[styles.container, isDarkMode && styles.containerDark]}>
+    <LinearGradient
+      colors={isDarkMode ? ['#232526', '#414345'] : ['#FFEFBA', '#FFFFFF']}
+      style={styles.container}
+    >
       {/* Scrollable content stays at the top */}
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={[styles.operatorContainer, isDarkMode && styles.operatorContainerDark]}>
           <Image
             source={{ uri: getOperatorIcon() }} // Dynamically load the appropriate icon based on transaction type
             style={styles.operatorIcon}
+            resizeMode="contain" // Ensure the image fits without being cropped
           />
           <View>
             <Text style={[styles.operatorName, isDarkMode && styles.textDark]}>{operator}</Text>
@@ -79,8 +112,9 @@ const ConfirmationScreen = () => {
             {/* Wallet Icon and "Saldo Saya" Text */}
             <View style={styles.walletContainer}>
               <Image
-                source={{ uri: 'https://img.icons8.com/ios-filled/50/000000/wallet.png' }} // Replace with wallet icon
+                source={{ uri: getWalletIcon() }} // Change wallet icon based on dark mode
                 style={styles.walletIcon}
+                resizeMode="contain"
               />
               <View>
                 <Text style={[styles.paymentText, isDarkMode && styles.textDark]}>Saldo saya</Text>
@@ -112,17 +146,13 @@ const ConfirmationScreen = () => {
       <TouchableOpacity style={styles.confirmButton} onPress={handlePayment}>
         <Text style={styles.confirmButtonText}>Konfirmasi</Text>
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
-  },
-  containerDark: {
-    backgroundColor: '#1c1c1e', // Dark mode background
   },
   contentContainer: {
     padding: 20,
@@ -133,19 +163,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#f0f0f0',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 15, // Rounded corners
     marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
   operatorContainerDark: {
     backgroundColor: '#2c2c2e', // Dark mode operator container background
   },
   operatorIcon: {
-    width: 40,
-    height: 40,
-    marginRight: 10,
+    width: 50, // Larger icon for better visual
+    height: 50,
+    marginRight: 15,
+    aspectRatio: 1, // To maintain aspect ratio
   },
   operatorName: {
-    fontSize: 18,
+    fontSize: 20, // Larger font size
     fontWeight: 'bold',
   },
   phoneNumber: {
@@ -170,7 +205,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#fff',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 15, // Rounded corners
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -185,9 +220,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   walletIcon: {
-    width: 30,
-    height: 30,
-    marginRight: 10, // Adds spacing between icon and text
+    width: 40, // Bigger icon
+    height: 40,
+    marginRight: 15, // Adds spacing between icon and text
+    aspectRatio: 1,
   },
   paymentText: {
     fontSize: 16,
@@ -225,7 +261,7 @@ const styles = StyleSheet.create({
     color: '#f9f9f9', // Dark mode text color
   },
   confirmButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FF6B6B', // Bright confirm button color
     paddingVertical: 15,
     borderRadius: 30,
     alignItems: 'center',
@@ -234,10 +270,14 @@ const styles = StyleSheet.create({
     bottom: 20,           // A small offset from the bottom
     left: 20,
     right: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
   },
   confirmButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

@@ -48,16 +48,14 @@ const textStrings = {
 };
 
 const ProfileScreen = () => {
-  const { isDarkMode, setIsDarkMode } = useTheme(); // Akses status dark mode
-  const [language, setLanguage] = useState<'EN' | 'ID'>('EN'); // Bahasa diatur secara lokal
-  const [modalVisible, setModalVisible] = useState(false); // Mengatur modal untuk Android
+  const { isDarkMode, setIsDarkMode } = useTheme(); 
+  const [language, setLanguage] = useState<'EN' | 'ID'>('EN'); 
+  const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
 
-  // Fungsi toggle untuk dark mode
   const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
 
-  // Fungsi debounce untuk menekan tombol back
   const handleBackPress = useCallback(
     debounce(() => {
       navigation.goBack();
@@ -65,9 +63,8 @@ const ProfileScreen = () => {
     [navigation]
   );
 
-  const strings = textStrings[language]; // Akses string teks berdasarkan bahasa yang dipilih
+  const strings = textStrings[language]; 
 
-  // Fungsi untuk menampilkan pilihan bahasa
   const showLanguageOptions = () => {
     if (Platform.OS === 'ios') {
       ActionSheetIOS.showActionSheetWithOptions(
@@ -85,29 +82,25 @@ const ProfileScreen = () => {
     }
   };
 
-  // Fungsi untuk memilih bahasa
+  
   const selectLanguage = (lang: 'EN' | 'ID') => {
     setLanguage(lang);
-    setModalVisible(false); // Tutup modal setelah memilih bahasa
+    setModalVisible(false); 
   };
 
   return (
     <LinearGradient
-      // Menggunakan warna gradasi soft sebelumnya untuk light mode
       colors={isDarkMode ? ['#2d2d2d', '#5a1f5c'] : ['#f7d1e3', '#fef6e4', '#d4fcf8']}
       style={styles.container}
     >
-      {/* Tombol Kembali */}
       <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
         <FontAwesome name="chevron-left" size={24} color={isDarkMode ? 'white' : 'black'} />
       </TouchableOpacity>
 
-      {/* Judul Profil */}
       <Text style={[styles.title, isDarkMode ? styles.textDark : styles.textLight]}>
         {strings.profileTitle}
       </Text>
 
-      {/* Detail Profil */}
       <View style={styles.profileContainer}>
         <Image
           source={{ uri: 'https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/65/2023/09/04/IU-korea-2718228728.jpg' }}
@@ -124,7 +117,6 @@ const ProfileScreen = () => {
         </Text>
       </View>
 
-      {/* Pengaturan Bahasa dan Mode Gelap */}
       <View style={styles.settingContainer}>
         {/* Pengaturan Bahasa */}
         <TouchableOpacity style={styles.settingRow} onPress={showLanguageOptions}>
@@ -137,7 +129,6 @@ const ProfileScreen = () => {
           </View>
         </TouchableOpacity>
 
-        {/* Pengaturan Mode Gelap */}
         <View style={styles.settingRow}>
           <Text style={[styles.settingLabel, isDarkMode ? styles.textDark : styles.textLight]}>
             {strings.darkMode}

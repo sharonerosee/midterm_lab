@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Keyboard } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from './_layout'; // Import the useTheme hook
 
 const PinInputScreen = () => {
   const [pin, setPin] = useState('');
@@ -8,8 +9,9 @@ const PinInputScreen = () => {
   const [attempts, setAttempts] = useState(0);
   const [showRedDots, setShowRedDots] = useState(false);
 
+  const { isDarkMode } = useTheme(); // Get current theme mode
   const maxAttempts = 3;
-  const birthDatePin = '221104'; // PIN yang dianggap salah
+  const birthDatePin = '221104'; // Incorrect PIN
   const transactionAmount = 6500;
   const initialBalance = 1000000;
   const navigation = useNavigation();
@@ -24,7 +26,7 @@ const PinInputScreen = () => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: '', // Menghilangkan teks header
+      headerTitle: '', // Hide header title
     });
 
     const keyboardListener = Keyboard.addListener('keyboardDidHide', () => {
@@ -40,7 +42,6 @@ const PinInputScreen = () => {
 
   const checkPin = () => {
     if (pin === birthDatePin) {
-      // Jika PIN adalah birthDatePin, maka dianggap salah
       setError(true);
       setShowRedDots(true);
 
@@ -57,7 +58,6 @@ const PinInputScreen = () => {
         });
       }
     } else {
-      // Jika PIN bukan birthDatePin, maka dianggap benar
       const remainingBalance = initialBalance - transactionAmount;
       navigation.navigate('TransactionResultScreen', {
         success: true,
@@ -90,16 +90,18 @@ const PinInputScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Masukkan PIN Anda</Text>
-      <Text style={styles.subHeader}>
+    <View style={[styles.container, isDarkMode ? styles.darkContainer : styles.lightContainer]}>
+      <Text style={[styles.header, isDarkMode ? styles.darkText : styles.lightText]}>
+        Masukkan PIN Anda
+      </Text>
+      <Text style={[styles.subHeader, isDarkMode ? styles.darkSubText : styles.lightSubText]}>
         {error ? 'PIN salah. Silahkan coba lagi.' : 'Masukkan PIN aplikasi Anda.'}
       </Text>
 
       <View style={styles.pinContainer}>{renderPinDots()}</View>
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, isDarkMode ? styles.darkInput : styles.lightInput]}
         value={pin}
         onChangeText={handlePinChange}
         keyboardType="numeric"
@@ -115,6 +117,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  darkContainer: {
+    backgroundColor: '#000',
+  },
+  lightContainer: {
     backgroundColor: '#fff',
   },
   header: {
@@ -122,10 +129,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  darkText: {
+    color: '#fff',
+  },
+  lightText: {
+    color: '#000',
+  },
   subHeader: {
     fontSize: 16,
-    color: '#888',
     marginBottom: 20,
+  },
+  darkSubText: {
+    color: '#aaa',
+  },
+  lightSubText: {
+    color: '#888',
   },
   pinContainer: {
     flexDirection: 'row',
@@ -150,10 +168,17 @@ const styles = StyleSheet.create({
   input: {
     width: '60%',
     borderBottomWidth: 1,
-    borderBottomColor: '#007AFF',
     fontSize: 24,
     textAlign: 'center',
     marginBottom: 20,
+  },
+  darkInput: {
+    borderBottomColor: '#fff',
+    color: '#fff',
+  },
+  lightInput: {
+    borderBottomColor: '#007AFF',
+    color: '#000',
   },
 });
 

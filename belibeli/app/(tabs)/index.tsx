@@ -2,15 +2,14 @@ import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient'; // Untuk gradasi
-import { useTheme } from '../_layout'; // Import useTheme untuk dark mode
+import { LinearGradient } from 'expo-linear-gradient';
+import { useTheme } from '../_layout';
 
 const HomeScreen = () => {
-  const { isDarkMode } = useTheme(); // Mengakses status dark mode dari context
+  const { isDarkMode } = useTheme();
   const navigation = useNavigation();
 
-  const floatAnim = useRef(new Animated.Value(0)).current; // Inisialisasi floatAnim dengan Animated.Value
-
+  const floatAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -20,7 +19,7 @@ const HomeScreen = () => {
           useNativeDriver: true,
         }),
         Animated.timing(floatAnim, {
-          toValue: 0, 
+          toValue: 0,
           duration: 900,
           useNativeDriver: true,
         }),
@@ -34,14 +33,12 @@ const HomeScreen = () => {
 
   return (
     <LinearGradient
-      // Gradasi lembut dengan warna pastel untuk light mode, lebih gelap dan subtle untuk dark mode
       colors={isDarkMode ? ['#2c2c2e', '#5a1f5c'] : ['#f7d1e3', '#fef6e4', '#d4fcf8']}
       style={styles.container}
     >
-      {/* Logo dengan animasi floating */}
       <Animated.Image
-        source={require('../../assets/images/union.png')} // Pastikan path logo benar
-        style={[styles.logo, { transform: [{ translateY: floatAnim }] }]} // Menambahkan animasi floating
+        source={require('../../assets/images/union.png')} 
+        style={[styles.logo, { transform: [{ translateY: floatAnim }] }]} 
         resizeMode="contain"
       />
 
@@ -174,17 +171,17 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   cardLight: {
-    backgroundColor: '#ffffff', // Warna netral untuk light mode
+    backgroundColor: '#ffffff',
   },
   cardDark: {
-    backgroundColor: '#444', // Warna pink tua/gelap untuk dark mode
+    backgroundColor: '#444', 
   },
   header: {
     alignItems: 'flex-start',
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 20, // Ukuran font lebih besar
+    fontSize: 20, 
     fontWeight: '600',
     marginBottom: 5,
   },
@@ -194,7 +191,7 @@ const styles = StyleSheet.create({
   },
   horizontalLine: {
     height: 1,
-    backgroundColor: '#89b7eb', // Warna mint/light blue yang menenangkan
+    backgroundColor: '#89b7eb', 
     width: '100%',
     marginVertical: 10,
   },
@@ -210,7 +207,7 @@ const styles = StyleSheet.create({
   },
   verticalLine: {
     width: 1,
-    backgroundColor: '#89b7eb', // Garis vertikal soft blue
+    backgroundColor: '#89b7eb', 
     height: '80%',
   },
   iconText: {
@@ -238,10 +235,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   roundButtonLight: {
-    backgroundColor: '#fff5f7', // Soft pink untuk light mode
+    backgroundColor: '#fff5f7', 
   },
   roundButtonDark: {
-    backgroundColor: '#5c2a2d', // Pink gelap untuk dark mode
+    backgroundColor: '#5c2a2d', 
   },
   roundButtonText: {
     marginTop: 10,
@@ -250,10 +247,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textLight: {
-    color: '#000', // Teks gelap di light mode
+    color: '#000', 
   },
   textDark: {
-    color: '#ffcccc', // Teks pink di dark mode
+    color: '#ffcccc', 
   },
 });
 

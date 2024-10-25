@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Button, Clipboard } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useTheme } from '../_layout'; // Menggunakan custom hook untuk tema
-import { LinearGradient } from 'expo-linear-gradient'; // Untuk gradasi latar belakang
+import { useTheme } from '../_layout'; 
+import { LinearGradient } from 'expo-linear-gradient'; 
 
 // Daftar promo menarik
 const promoList = [
@@ -14,25 +14,23 @@ const promoList = [
 ];
 
 export default function NotifikasiScreen() {
-  const { isDarkMode } = useTheme(); // Akses tema dari context
-  const [selectedPromo, setSelectedPromo] = useState(null); // State untuk promo yang dipilih
-  const [isModalVisible, setModalVisible] = useState(false); // State untuk visibilitas modal
+  const { isDarkMode } = useTheme(); 
+  const [selectedPromo, setSelectedPromo] = useState(null); 
+  const [isModalVisible, setModalVisible] = useState(false); 
 
-  // Fungsi untuk memilih promo dan menampilkan modal
   const handlePromoClick = (promo) => {
-    setSelectedPromo(promo); // Set promo yang dipilih
-    setModalVisible(true); // Tampilkan modal
+    setSelectedPromo(promo); 
+    setModalVisible(true); 
   };
 
   // Fungsi untuk menyalin kode voucher ke clipboard
   const handleCopyCode = () => {
     if (selectedPromo) {
-      Clipboard.setString('KODEVOUCHER2024'); // Kode voucher yang disalin (contoh saja)
-      setModalVisible(false); // Tutup modal setelah disalin
+      Clipboard.setString('KODEVOUCHER2024'); 
+      setModalVisible(false);
     }
   };
 
-  // Fungsi untuk memilih ikon berdasarkan tipe promo
   const getIcon = (type) => {
     switch (type) {
       case 'grab':
@@ -78,7 +76,6 @@ export default function NotifikasiScreen() {
         contentContainerStyle={styles.promoList}
       />
 
-      {/* Modal untuk menampilkan kode voucher */}
       <Modal
         visible={isModalVisible}
         transparent={true}
@@ -133,22 +130,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   promoCardgrab: {
-    backgroundColor: '#c8e6c9', // Warna hijau untuk promo Grab
+    backgroundColor: '#c8e6c9', 
   },
   promoCardgojek: {
-    backgroundColor: '#fff3e0', // Warna oranye untuk promo Gojek
+    backgroundColor: '#fff3e0', 
   },
   promoCardfilm: {
-    backgroundColor: '#ffcdd2', // Warna merah muda untuk promo Film
+    backgroundColor: '#ffcdd2', 
   },
   promoCardkafe: {
-    backgroundColor: '#ffe0b2', // Warna coklat muda untuk promo Kafe
+    backgroundColor: '#ffe0b2', 
   },
   promoCardojek: {
-    backgroundColor: '#87CEEB', // Warna lilac untuk promo Ojek Murah
+    backgroundColor: '#87CEEB', 
   },
   promoCardDark: {
-    backgroundColor: '#1e1e1e', // Warna dark mode
+    backgroundColor: '#1e1e1e', 
   },
   iconContainer: {
     marginRight: 15,
