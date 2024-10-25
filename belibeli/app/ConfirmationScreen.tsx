@@ -36,7 +36,6 @@ const ConfirmationScreen = () => {
     }
   };
 
-  // Mengatur title halaman di header
   useEffect(() => {
     navigation.setOptions({
       headerTitle: 'Konfirmasi Pembayaran',
@@ -74,12 +73,10 @@ const ConfirmationScreen = () => {
 
   const handlePayment = () => {
     navigation.navigate('PinInput', {
-      transactionType: transactionType,
-      number: number,
-      nominal: nominal,
-      harga: harga,
+      harga: harga, 
     });
   };
+  
 
   return (
     <LinearGradient

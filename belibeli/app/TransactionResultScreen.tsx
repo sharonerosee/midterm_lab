@@ -1,18 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useTheme } from './_layout'; 
-import { LinearGradient } from 'expo-linear-gradient'; 
+import { useTheme } from './_layout';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useTransaction } from './TransactionContext';
 
 const TransactionResultScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { isDarkMode } = useTheme(); 
+  const { isDarkMode } = useTheme();
+  const { addTransaction } = useTransaction();
   const { success, remainingBalance, amount } = route.params;
 
   const handleBackPress = () => {
-    navigation.navigate('index'); 
+    navigation.navigate('riwayat');
   };
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: '',
+    });
+
+    addTransaction({
+      id: Date.now().toString(),
+      status: success ? 'success' : 'failed', // Tambahkan status transaksi gagal
+      amount: success ? amount : 0,
+      remainingBalance: success ? remainingBalance : null, // Sisa saldo hanya jika berhasil
+      date: new Date().toISOString().split('T')[0],
+    });
+  }, [navigation, success]);
 
   return (
     <LinearGradient
@@ -50,55 +66,37 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  successContainer: {
+    marginBottom: 30,
+    alignItems: 'center',
+  },
+  failContainer: {
+    marginBottom: 30,
+    alignItems: 'center',
   },
   header: {
     fontSize: 28,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 15,
+    marginBottom: 10,
   },
   message: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 15,
-  },
-  successContainer: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 128, 0, 0.1)',
-    padding: 20,
-    borderRadius: 15,
-    marginBottom: 30,
-    width: '90%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-  },
-  failContainer: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 0, 0, 0.1)', 
-    padding: 20,
-    borderRadius: 15,
-    marginBottom: 30,
-    width: '90%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
   },
   textDark: {
-    color: '#f9f9f9', 
+    color: '#fff',
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FF6B6B',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 30,
     shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
     shadowOffset: { width: 0, height: 5 },
-    elevation: 5,
   },
   buttonText: {
     color: '#fff',
