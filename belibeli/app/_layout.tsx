@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState, createContext, useContext } from 'react';
 import 'react-native-reanimated';
+import { TransactionProvider } from './TransactionContext';
 
 const ThemeContext = createContext();
 const LanguageContext = createContext(); 
@@ -27,16 +28,18 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeContext.Provider value={{ isDarkMode, setIsDarkMode }}>
-      <LanguageContext.Provider value={{ language, setLanguage }}> 
-        <ThemeProvider value={isDarkMode ? DarkTheme : DefaultTheme}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        </ThemeProvider>
-      </LanguageContext.Provider>
-    </ThemeContext.Provider>
+    <TransactionProvider>
+      <ThemeContext.Provider value={{ isDarkMode, setIsDarkMode }}>
+        <LanguageContext.Provider value={{ language, setLanguage }}> 
+          <ThemeProvider value={isDarkMode ? DarkTheme : DefaultTheme}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </ThemeProvider>
+        </LanguageContext.Provider>
+      </ThemeContext.Provider>
+    </TransactionProvider>
   );
 }
 

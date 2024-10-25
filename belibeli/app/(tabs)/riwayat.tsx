@@ -1,37 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../_layout';
-import { LinearGradient } from 'expo-linear-gradient'; 
+import { LinearGradient } from 'expo-linear-gradient';
+import { useTransaction } from '../TransactionContext';
 
 const Riwayat = () => {
   const navigation = useNavigation();
-  const route = useRoute();
   const { isDarkMode } = useTheme();
-
-  const [transactions, setTransactions] = useState([
-    {
-      id: '1',
-      status: 'success',
-      amount: 6500,
-      remainingBalance: 993500,
-      date: '2024-10-25',
-    },
-    {
-      id: '2',
-      status: 'failed',
-      amount: 6500,
-      remainingBalance: 1000000,
-      date: '2024-10-24',
-    },
-  ]);
+  const { transactions } = useTransaction();
 
   useEffect(() => {
-    if (route.params?.newTransaction) {
-      const newTransaction = route.params.newTransaction;
-      setTransactions((prevTransactions) => [newTransaction, ...prevTransactions]);
-    }
-  }, [route.params?.newTransaction]);
+    console.log('Transactions:', transactions); 
+  }, [transactions]);
 
   const renderTransaction = ({ item }) => (
     <TouchableOpacity
@@ -93,61 +74,50 @@ const Riwayat = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    paddingTop: 60, 
-  },
-  promoList: {
-    paddingBottom: 30,
+    padding: 20,
+    paddingTop: 60,
   },
   transactionItem: {
-    marginVertical: 8,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  gradient: {
-    padding: 16,
-    borderRadius: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    marginBottom: 15,
+    borderRadius: 15,
+    overflow: 'hidden',
   },
   transactionItemLight: {
-    backgroundColor: '#f9f9f9',
-    borderColor: '#ddd',
+    backgroundColor: '#fff',
   },
   transactionItemDark: {
-    backgroundColor: '#444',
-    borderColor: '#555',
+    backgroundColor: '#333',
+  },
+  gradient: {
+    padding: 15,
+    borderRadius: 15,
   },
   transactionInfo: {
-    flexDirection: 'column',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   transactionDate: {
     fontSize: 16,
   },
   transactionAmount: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  textLight: {
-    color: '#333',
-  },
-  textDark: {
-    color: '#fff',
-  },
-  transactionStatus: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  transactionStatus: {
+    marginTop: 10,
+    textAlign: 'right',
   },
   successStatus: {
     color: 'green',
   },
   failedStatus: {
     color: 'red',
+  },
+  textDark: {
+    color: '#fff',
+  },
+  textLight: {
+    color: '#000',
   },
   noTransactionContainer: {
     flex: 1,
@@ -156,6 +126,7 @@ const styles = StyleSheet.create({
   },
   noTransactionText: {
     fontSize: 18,
+    textAlign: 'center',
   },
 });
 

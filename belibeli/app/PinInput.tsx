@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Keyboard } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from './_layout'; 
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useTheme } from './_layout';
 
 const PinInputScreen = () => {
   const [pin, setPin] = useState('');
@@ -9,12 +9,14 @@ const PinInputScreen = () => {
   const [attempts, setAttempts] = useState(0);
   const [showRedDots, setShowRedDots] = useState(false);
 
-  const { isDarkMode } = useTheme(); 
+  const { isDarkMode } = useTheme();
   const maxAttempts = 3;
   const birthDatePin = '221104'; 
-  const transactionAmount = 6500;
   const initialBalance = 1000000;
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const { harga } = route.params; 
 
   const handlePinChange = (value) => {
     if (/^\d*$/.test(value) && value.length <= 6) {
@@ -26,7 +28,7 @@ const PinInputScreen = () => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: '', 
+      headerTitle: '',
     });
 
     const keyboardListener = Keyboard.addListener('keyboardDidHide', () => {
@@ -59,11 +61,11 @@ const PinInputScreen = () => {
         });
       }
     } else {
-      const remainingBalance = initialBalance - transactionAmount;
+      const remainingBalance = initialBalance - harga; 
       navigation.navigate('TransactionResultScreen', {
         success: true,
-        amount: transactionAmount,
-        remainingBalance: remainingBalance,
+        amount: harga, 
+        remainingBalance: remainingBalance, 
       });
     }
   };
