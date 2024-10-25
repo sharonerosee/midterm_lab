@@ -1,18 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useTheme } from './_layout'; // Import useTheme hook for dark mode
-import { LinearGradient } from 'expo-linear-gradient'; // For background gradient
+import { useTheme } from './_layout'; 
+import { LinearGradient } from 'expo-linear-gradient'; 
 
 const TransactionResultScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { isDarkMode } = useTheme(); // Get dark mode state
-  
+  const { isDarkMode } = useTheme(); 
   const { success, remainingBalance, amount } = route.params;
 
   const handleBackPress = () => {
-    navigation.navigate('index'); // Navigate to the index screen on button press
+    navigation.navigate('index'); 
   };
 
   return (
@@ -65,7 +64,7 @@ const styles = StyleSheet.create({
   },
   successContainer: {
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 128, 0, 0.1)', // Light green background for success
+    backgroundColor: 'rgba(0, 128, 0, 0.1)',
     padding: 20,
     borderRadius: 15,
     marginBottom: 30,
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
   },
   failContainer: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 0, 0, 0.1)', // Light red background for failure
+    backgroundColor: 'rgba(255, 0, 0, 0.1)', 
     padding: 20,
     borderRadius: 15,
     marginBottom: 30,
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
   },
   textDark: {
-    color: '#f9f9f9', // White text for dark mode
+    color: '#f9f9f9', 
   },
   button: {
     backgroundColor: '#007AFF',
