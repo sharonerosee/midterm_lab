@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from './_layout';
@@ -11,24 +11,43 @@ const TransactionResultScreen = () => {
   const { isDarkMode } = useTheme();
   const { addTransaction } = useTransaction();
   const { success, remainingBalance, amount } = route.params;
+  const [currentDateTime, setCurrentDateTime] = useState('');
+  const transactionAdded = useRef(false); 
 
   const handleBackPress = () => {
     navigation.navigate('riwayat');
   };
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerTitle: '',
-    });
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const day = now.getDate().toString().padStart(2, '0');
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const year = now.getFullYear();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
 
-    addTransaction({
-      id: Date.now().toString(),
-      status: success ? 'success' : 'failed', // Tambahkan status transaksi gagal
-      amount: success ? amount : 0,
-      remainingBalance: success ? remainingBalance : null, // Sisa saldo hanya jika berhasil
-      date: new Date().toISOString().split('T')[0],
-    });
-  }, [navigation, success]);
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+  };
+
+  useEffect(() => {
+    const currentTime = getCurrentDateTime();
+    setCurrentDateTime(currentTime); 
+
+    navigation.setOptions({ headerTitle: '' });
+  }, [navigation]);
+
+  useEffect(() => {
+    if (currentDateTime && !transactionAdded.current) {
+      addTransaction({
+        id: Date.now().toString(),
+        status: success ? 'success' : 'failed',
+        amount: success ? amount : 0,
+        remainingBalance: success ? remainingBalance : null,
+        date: currentDateTime,
+      });
+      transactionAdded.current = true; 
+    }
+  }, [currentDateTime, success]);
 
   return (
     <LinearGradient
@@ -44,12 +63,18 @@ const TransactionResultScreen = () => {
           <Text style={[styles.message, isDarkMode && styles.textDark]}>
             Sisa saldo: Rp {remainingBalance.toLocaleString()}.
           </Text>
+          <Text style={[styles.message, isDarkMode && styles.textDark]}>
+            Waktu Transaksi: {currentDateTime}
+          </Text>
         </View>
       ) : (
         <View style={styles.failContainer}>
           <Text style={[styles.header, isDarkMode && styles.textDark]}>Transaksi Gagal!</Text>
           <Text style={[styles.message, isDarkMode && styles.textDark]}>
             Anda telah salah memasukkan PIN sebanyak 3 kali.
+          </Text>
+          <Text style={[styles.message, isDarkMode && styles.textDark]}>
+            Waktu Percobaan: {currentDateTime}
           </Text>
         </View>
       )}
