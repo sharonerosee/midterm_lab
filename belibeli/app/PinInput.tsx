@@ -34,6 +34,7 @@ const PinInputScreen = () => {
         checkPin();
       }
     });
+    
 
     return () => {
       keyboardListener.remove();
